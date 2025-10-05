@@ -111,44 +111,44 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
           Current KDM Rates (per 10g)
         </h3>
         <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900/50 p-3 rounded-md">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-slate-900/50 p-3 rounded-md">
             <span className="font-semibold text-white">916 KDM (22 Karat)</span>
             {kdmPrices.variant916Found ? (
-              <div className="text-right">
-                <p className="text-lg font-bold text-green-400">
+              <div className="flex flex-col items-start text-right w-full sm:w-auto">
+                <p className="text-lg sm:text-xl font-bold text-green-400 leading-tight sm:leading-normal">
                   ₹
                   {kdmPrices.price916.toLocaleString("en-IN", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
                 </p>
-                <p className="text-sm text-amber-300">
+                <p className="text-lg sm:text-sm text-amber-300">
                   {kdmPrices.hindiPrice916}
                 </p>
               </div>
             ) : (
-              <div className="text-right text-slate-400 text-sm">
+              <div className="text-left text-slate-400 text-sm w-full sm:w-auto">
                 Variant not found
               </div>
             )}
           </div>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900/50 p-3 rounded-md">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-slate-900/50 p-3 rounded-md">
             <span className="font-semibold text-white">750 KDM (18 Karat)</span>
             {kdmPrices.variant750Found ? (
-              <div className="text-right">
-                <p className="text-lg font-bold text-green-400">
+              <div className="flex flex-col items-start text-right w-full sm:w-auto">
+                <p className="text-lg sm:text-xl font-bold text-green-400 leading-tight sm:leading-normal">
                   ₹
                   {kdmPrices.price750.toLocaleString("en-IN", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
                   })}
                 </p>
-                <p className="text-sm text-amber-300">
+                <p className="text-lg sm:text-sm text-amber-300">
                   {kdmPrices.hindiPrice750}
                 </p>
               </div>
             ) : (
-              <div className="text-right text-slate-400 text-sm">
+              <div className="text-right text-slate-400 text-sm w-full sm:w-auto">
                 Variant not found
               </div>
             )}
