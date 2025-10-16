@@ -42,7 +42,7 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
       return;
     }
 
-    const variant = variants.find((v) => v.id === selectedVariantId);
+    const variant = variants.find((v) => v._id === selectedVariantId);
     if (!variant) {
       setError("Selected variant not found.");
       return;
@@ -50,8 +50,7 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
 
     const purchasePricePerGram = (purePrice * variant.tunch) / 100 / 10;
     const totalPurchasePrice = purchasePricePerGram * weightNum;
-    const rawPrice10g =
-      (purePrice * variant.tunch) / 100 + variant.addOnCharges;
+    const rawPrice10g = (purePrice * variant.tunch) / 100 + variant.addOnPrice;
     const roundedPrice10g = Math.ceil(rawPrice10g / 100) * 100;
     const pricePerGram = roundedPrice10g / 10;
     const totalMetalPrice = pricePerGram * weightNum;
@@ -111,7 +110,7 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
           >
             <option value="">Select a variant</option>
             {variants.map((v) => (
-              <option key={v.id} value={v.id}>
+              <option key={v._id} value={v._id}>
                 {v.name}
               </option>
             ))}

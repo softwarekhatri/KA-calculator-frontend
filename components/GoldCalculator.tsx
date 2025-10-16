@@ -35,7 +35,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
     let hindiPrice750 = "अनुपलब्ध";
     if (variant750) {
       const rawPrice750 =
-        (purePrice * variant750.tunch) / 100 + variant750.addOnCharges;
+        (purePrice * variant750.tunch) / 100 + variant750.addOnPrice;
       price750 = Math.ceil(rawPrice750 / 100) * 100;
       hindiPrice750 = numberToHindiWords(price750) + " रुपये";
     }
@@ -44,7 +44,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
     let hindiPrice916 = "अनुपलब्ध";
     if (variant916) {
       const rawPrice916 =
-        (purePrice * variant916.tunch) / 100 + variant916.addOnCharges;
+        (purePrice * variant916.tunch) / 100 + variant916.addOnPrice;
       price916 = Math.ceil(rawPrice916 / 100) * 100;
       hindiPrice916 = numberToHindiWords(price916) + " रुपये";
     }
@@ -74,7 +74,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
       return;
     }
 
-    const variant = variants.find((v) => v.id === selectedVariantId);
+    const variant = variants.find((v) => v._id === selectedVariantId);
     if (!variant) {
       setError("Selected variant not found.");
       return;
@@ -83,8 +83,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
     const purchasePricePerGram = (purePrice * variant.tunch) / 100 / 10;
     const totalPurchasePrice = purchasePricePerGram * weightNum;
 
-    const rawPrice10g =
-      (purePrice * variant.tunch) / 100 + variant.addOnCharges;
+    const rawPrice10g = (purePrice * variant.tunch) / 100 + variant.addOnPrice;
     const roundedPrice10g = Math.ceil(rawPrice10g / 100) * 100;
     const pricePerGram = roundedPrice10g / 10;
     const totalMetalPrice = pricePerGram * weightNum;
@@ -195,7 +194,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
             >
               <option value="">Select a variant</option>
               {variants.map((v) => (
-                <option key={v.id} value={v.id}>
+                <option key={v._id} value={v._id}>
                   {v.name}
                 </option>
               ))}
