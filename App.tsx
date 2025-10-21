@@ -4,7 +4,7 @@ import ConfigSection from "./components/ConfigSection";
 import GoldCalculator from "./components/GoldCalculator";
 import SilverCalculator from "./components/SilverCalculator";
 import Modal from "./components/Modal";
-import { ItemVariant, MetalType } from "./types";
+import { ItemVariant } from "./types";
 import { backendInstance } from "./utils/constant";
 import { IPriceData, metalType } from "./utils/types";
 
@@ -27,49 +27,93 @@ const App: React.FC = () => {
   const [editingVariant, setEditingVariant] = useState<ItemVariant | null>(
     null
   );
-  const [editingMetalType, setEditingMetalType] = useState<MetalType>("Gold");
+  const [editingMetalType, setEditingMetalType] = useState<metalType>("GOLD");
 
-  const handleAddVariant = (type: MetalType) => {
+  const handleAddVariant = (type: metalType) => {
     setEditingVariant(null);
     setEditingMetalType(type);
     setIsModalOpen(true);
   };
 
-  const handleEditVariant = (type: MetalType, variant: ItemVariant) => {
+  const handleEditVariant = (type: metalType, variant: ItemVariant) => {
     setEditingVariant(variant);
     setEditingMetalType(type);
     setIsModalOpen(true);
   };
 
-  const handleDeleteVariant = (type: MetalType, id: string) => {
+  const handleDeleteVariant = (type: metalType, id: string) => {
     if (window.confirm("Are you sure you want to delete this variant?")) {
-      if (type === "Gold") {
-        setGoldVariants((prev) => prev.filter((v) => v.id !== id));
-      } else {
-        setSilverVariants((prev) => prev.filter((v) => v.id !== id));
-      }
+      backendInstance
+        .delete(`/item-configs`, { data: { _id: id } })
+        .then(() => {
+          if (type === "GOLD") {
+            setGoldVariants((prev) => prev.filter((v) => v._id !== id));
+          } else {
+            setSilverVariants((prev) => prev.filter((v) => v._id !== id));
+          }
+        })
+        .catch((err) => {
+          alert("Failed to delete variant.");
+        });
     }
   };
 
-  const handleSaveVariant = (variantData: Omit<ItemVariant, "id">) => {
-    if (editingMetalType === "Gold") {
-      setGoldVariants((prev) => {
-        if (editingVariant) {
-          return prev.map((v) =>
-            v.id === editingVariant.id ? { ...v, ...variantData } : v
-          );
-        }
-        return [...prev, { ...variantData, id: Date.now().toString() }];
-      });
+  const handleSaveVariant = (variantData: ItemVariant) => {
+    if (editingVariant && editingVariant._id) {
+      // Update existing variant
+      backendInstance
+        .put(`/item-configs`, {
+          ...variantData,
+          _id: editingVariant._id,
+          variant: editingMetalType,
+        })
+        .then((response) => {
+          if (editingMetalType === "GOLD") {
+            setGoldVariants((prev) =>
+              prev.map((v) =>
+                v._id === editingVariant._id
+                  ? {
+                      ...v,
+                      ...variantData,
+                      _id: editingVariant._id,
+                      variant: editingMetalType,
+                    }
+                  : v
+              )
+            );
+          } else {
+            setSilverVariants((prev) =>
+              prev.map((v) =>
+                v._id === editingVariant._id
+                  ? {
+                      ...v,
+                      ...variantData,
+                      _id: editingVariant._id,
+                      variant: editingMetalType,
+                    }
+                  : v
+              )
+            );
+          }
+        })
+        .catch(() => {
+          alert("Failed to update variant.");
+        });
     } else {
-      setSilverVariants((prev) => {
-        if (editingVariant) {
-          return prev.map((v) =>
-            v.id === editingVariant.id ? { ...v, ...variantData } : v
-          );
-        }
-        return [...prev, { ...variantData, id: Date.now().toString() }];
-      });
+      // Add new variant
+      backendInstance
+        .post(`/item-configs`, { ...variantData, variant: editingMetalType })
+        .then((response) => {
+          const newVariant = response.data;
+          if (editingMetalType === "GOLD") {
+            setGoldVariants((prev) => [...prev, newVariant]);
+          } else {
+            setSilverVariants((prev) => [...prev, newVariant]);
+          }
+        })
+        .catch(() => {
+          alert("Failed to add variant.");
+        });
     }
   };
 
@@ -100,6 +144,24 @@ const App: React.FC = () => {
         setSilverPrice(
           response.data.find((item: IPriceData) => item.type === "SILVER")
         );
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    backendInstance.get("/item-configs").then((response) => {
+      if (response.data) {
+        const goldItems: ItemVariant[] = [];
+        const silverItems: ItemVariant[] = [];
+        response.data.forEach((item: ItemVariant) => {
+          if (item.variant === "GOLD") {
+            goldItems.push(item);
+          } else if (item.variant === "SILVER") {
+            silverItems.push(item);
+          }
+        });
+        setGoldVariants(goldItems);
+        setSilverVariants(silverItems);
       }
     });
   }, []);

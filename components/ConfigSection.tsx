@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ItemVariant, MetalType } from "../types";
+import { ItemVariant } from "../types";
 import PencilIcon from "./icons/PencilIcon";
 import TrashIcon from "./icons/TrashIcon";
 import PlusIcon from "./icons/PlusIcon";
@@ -7,7 +7,7 @@ import { IPriceData, metalType } from "@/utils/types";
 import { backendInstance } from "@/utils/constant";
 
 interface VariantTableProps {
-  metalType: MetalType;
+  metalType: metalType;
   variants: ItemVariant[];
   onEdit: (variant: ItemVariant) => void;
   onDelete: (id: string) => void;
@@ -21,7 +21,7 @@ const VariantTable: React.FC<VariantTableProps> = ({
   onDelete,
   onAdd,
 }) => {
-  const headerColor = metalType === "Gold" ? "bg-amber-900/50" : "bg-slate-700";
+  const headerColor = metalType === "GOLD" ? "bg-amber-900/50" : "bg-slate-700";
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-4">
@@ -74,7 +74,7 @@ const VariantTable: React.FC<VariantTableProps> = ({
           <tbody className="bg-slate-800 divide-y divide-slate-700">
             {variants.length > 0 ? (
               variants.map((variant) => (
-                <tr key={variant.id}>
+                <tr key={variant._id}>
                   <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-white">
                     {variant.name}
                   </td>
@@ -82,7 +82,7 @@ const VariantTable: React.FC<VariantTableProps> = ({
                     {variant.tunch}%
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-300">
-                    ₹{variant.addOnCharges.toLocaleString("en-IN")}
+                    ₹{variant.addOnPrice.toLocaleString("en-IN")}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-300">
                     ₹{variant.makingCharge.toLocaleString("en-IN")}
@@ -96,7 +96,7 @@ const VariantTable: React.FC<VariantTableProps> = ({
                         <PencilIcon className="w-5 h-5" />
                       </button>
                       <button
-                        onClick={() => onDelete(variant.id)}
+                        onClick={() => onDelete(variant._id)}
                         className="text-red-400 hover:text-red-300"
                       >
                         <TrashIcon className="w-5 h-5" />
@@ -128,9 +128,9 @@ interface ConfigSectionProps {
   setGoldVariants: (variants: ItemVariant[]) => void;
   silverVariants: ItemVariant[];
   setSilverVariants: (variants: ItemVariant[]) => void;
-  onEditVariant: (type: MetalType, variant: ItemVariant) => void;
-  onDeleteVariant: (type: MetalType, id: string) => void;
-  onAddVariant: (type: MetalType) => void;
+  onEditVariant: (type: metalType, variant: ItemVariant) => void;
+  onDeleteVariant: (type: metalType, id: string) => void;
+  onAddVariant: (type: metalType) => void;
 }
 
 const ConfigSection: React.FC<ConfigSectionProps> = (props) => {
@@ -351,18 +351,18 @@ const ConfigSection: React.FC<ConfigSectionProps> = (props) => {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <VariantTable
-          metalType="Gold"
+          metalType="GOLD"
           variants={props.goldVariants}
-          onEdit={(v) => props.onEditVariant("Gold", v)}
-          onDelete={(id) => props.onDeleteVariant("Gold", id)}
-          onAdd={() => props.onAddVariant("Gold")}
+          onEdit={(v) => props.onEditVariant("GOLD", v)}
+          onDelete={(id) => props.onDeleteVariant("GOLD", id)}
+          onAdd={() => props.onAddVariant("GOLD")}
         />
         <VariantTable
-          metalType="Silver"
+          metalType="SILVER"
           variants={props.silverVariants}
-          onEdit={(v) => props.onEditVariant("Silver", v)}
-          onDelete={(id) => props.onDeleteVariant("Silver", id)}
-          onAdd={() => props.onAddVariant("Silver")}
+          onEdit={(v) => props.onEditVariant("SILVER", v)}
+          onDelete={(id) => props.onDeleteVariant("SILVER", id)}
+          onAdd={() => props.onAddVariant("SILVER")}
         />
       </div>
     </div>

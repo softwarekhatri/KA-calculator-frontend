@@ -1,10 +1,10 @@
+import { metalType } from "./utils/types";
 
 export interface ItemVariant {
-  id: string;
+  _id?: string;
   name: string;
   tunch: number;
-  addOnCharges: number;
+  addOnPrice: number;
   makingCharge: number;
+  variant: metalType;
 }
-
-export type MetalType = 'Gold' | 'Silver';
