@@ -14,28 +14,13 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>("config");
   const [goldPrice, setGoldPrice] = useState<IPriceData>({
     type: "GOLD",
-    price: "Fetching Data...",
+    price: 0,
   });
   const [silverPrice, setSilverPrice] = useState<IPriceData>({
     type: "SILVER",
-    price: "Fetching Data...",
+    price: 0,
   });
-  const [goldVariants, setGoldVariants] = useState<ItemVariant[]>([
-    {
-      id: "default-750-kdm",
-      name: "750 KDM",
-      tunch: 75,
-      addOnCharges: 4500,
-      makingCharge: 500,
-    },
-    {
-      id: "default-916-kdm",
-      name: "916 KDM",
-      tunch: 91.6,
-      addOnCharges: 4000,
-      makingCharge: 400,
-    },
-  ]);
+  const [goldVariants, setGoldVariants] = useState<ItemVariant[]>([]);
   const [silverVariants, setSilverVariants] = useState<ItemVariant[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -173,11 +158,14 @@ const App: React.FC = () => {
             />
           )}
           {activeTab === "gold_calc" && (
-            <GoldCalculator purePrice={goldPrice} variants={goldVariants} />
+            <GoldCalculator
+              purePrice={goldPrice.price}
+              variants={goldVariants}
+            />
           )}
           {activeTab === "silver_calc" && (
             <SilverCalculator
-              purePrice={silverPrice}
+              purePrice={silverPrice.price}
               variants={silverVariants}
             />
           )}
