@@ -1,10 +1,13 @@
-import { metalType } from "./utils/types";
+import { makingChargeType, metalType } from "./utils/types";
 
 export interface ItemVariant {
   _id?: string;
   name: string;
-  tunch: number;
-  addOnPrice: number;
+  purchaseTunch: number;
+  saleTunch: number;
+  // tunch: number;
+  addOnPrice?: number;
   makingCharge: number;
+  makingChargeType: makingChargeType;
   variant: metalType;
 }

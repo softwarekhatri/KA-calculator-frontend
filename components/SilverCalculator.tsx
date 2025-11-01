@@ -8,14 +8,12 @@ interface SilverCalculatorProps {
 }
 
 interface CalculationResult {
-  finalPrice: number;
-  hindiPrice: string;
-  weight: number;
   variant: ItemVariant;
-  purePrice: number;
-  pricePe10Gram: number;
-  totalMetalPrice: number;
+  weight: number;
+  price10Gram: number;
   purchasePrice: number;
+  makingCharge: number;
+  sellingPrice: number;
 }
 
 const SilverCalculator: React.FC<SilverCalculatorProps> = ({
@@ -48,25 +46,33 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
       return;
     }
 
-    const purchasePricePerGram = (purePrice * variant.tunch) / 100 / 10;
-    const totalPurchasePrice = purchasePricePerGram * weightNum;
-    const rawPrice10g = (purePrice * variant.tunch) / 100 + variant.addOnPrice;
-    const roundedPrice10g = Math.ceil(rawPrice10g / 100) * 100;
-    const pricePerGram = roundedPrice10g / 10;
-    const totalMetalPrice = pricePerGram * weightNum;
-    const finalPrice = totalMetalPrice + variant.makingCharge;
-    const hindiPriceText =
-      numberToHindiWords(Math.round(finalPrice)) + " रुपये";
+    const purchasePrice =
+      ((purePrice * variant.purchaseTunch) / 1000) * weightNum + 200;
+    const roundedPurchasePrice = Math.ceil(purchasePrice / 100) * 100;
+
+    let sellingRatePer10Gram = purePrice * (variant.saleTunch / 100);
+    const addOn = variant.addOnPrice ?? 0;
+    if (addOn > 0) {
+      sellingRatePer10Gram += addOn;
+    }
+
+    let sellingPrice = (sellingRatePer10Gram / 10) * weightNum;
+    if (variant.makingChargeType === "PER_GRAM") {
+      sellingPrice += variant.makingCharge * weightNum;
+    } else if (variant.makingChargeType === "FIXED") {
+      sellingPrice += variant.makingCharge;
+    }
 
     setResult({
-      finalPrice,
-      hindiPrice: hindiPriceText,
-      weight: weightNum,
       variant,
-      purePrice: purePrice / 10,
-      pricePe10Gram: pricePerGram * 10,
-      totalMetalPrice,
-      purchasePrice: totalPurchasePrice,
+      weight: weightNum,
+      price10Gram: sellingRatePer10Gram,
+      purchasePrice: roundedPurchasePrice,
+      makingCharge:
+        variant.makingChargeType === "PER_GRAM"
+          ? variant.makingCharge * weightNum
+          : variant.makingCharge,
+      sellingPrice: Math.round(sellingPrice),
     });
   };
 
@@ -135,54 +141,41 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
           </h3>
           <div className="bg-slate-900/50 p-4 rounded-lg space-y-3">
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <span className="text-slate-400">Variant:</span>
+              <span className="text-slate-400">Item:</span>
               <span className="text-white font-medium text-right">
-                {result.variant.name} ({result.variant.tunch}%)
+                {result.variant.name} ({result.variant.purchaseTunch}%)
               </span>
-              <span className="text-slate-400">Weight:</span>
+              <span className="text-slate-400">वजन:</span>
               <span className="text-white font-medium text-right">
-                {result.weight} g
+                {result.weight} g - ({numberToHindiWords(result.weight)} ग्राम)
               </span>
-              <span className="text-slate-400">Price /10g:</span>
+              <span className="text-slate-400">कीमत/10g:</span>
               <span className="text-white font-medium text-right">
-                ₹
-                {result.pricePe10Gram.toLocaleString("en-IN", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                ₹{result.price10Gram.toLocaleString("en-IN")} (
+                {numberToHindiWords(result.price10Gram)} रुपये)
               </span>
-              <span className="text-slate-400">खरीदारी Price:</span>
+              <span className="text-slate-400">खरीदारी कीमत:</span>
               <span className="text-white font-medium text-right">
-                ₹
-                {result.purchasePrice.toLocaleString("en-IN", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                ₹{result.purchasePrice.toLocaleString("en-IN")} (
+                {numberToHindiWords(result.purchasePrice)} रुपये)
               </span>
-              <span className="text-slate-400">Total Metal Price:</span>
+              <span className="text-slate-400">मेकिंग चार्ज:</span>
               <span className="text-white font-medium text-right">
-                ₹
-                {result.totalMetalPrice.toLocaleString("en-IN", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </span>
-              <span className="text-slate-400">Making Charge:</span>
-              <span className="text-white font-medium text-right">
-                ₹{result.variant.makingCharge.toLocaleString("en-IN")}
+                ₹{result.makingCharge.toLocaleString("en-IN")} (
+                {numberToHindiWords(result.makingCharge)} रुपये)
               </span>
             </div>
             <div className="pt-4 mt-4 border-t border-slate-600 text-center">
-              <p className="text-slate-300">Final Price</p>
+              <p className="text-slate-300">बिक्री कीमत:</p>
               <p className="text-3xl font-bold text-green-400 mt-1">
                 ₹
-                {result.finalPrice.toLocaleString("en-IN", {
-                  minimumFractionDigits: 2,
+                {result.sellingPrice.toLocaleString("en-IN", {
+                  minimumFractionDigits: 0,
                   maximumFractionDigits: 2,
                 })}
               </p>
-              <p className="text-lg font-semibold text-amber-300 mt-2">
-                {result.hindiPrice}
+              <p className="text-lg font-semibold text-slate-300 mt-2">
+                {numberToHindiWords(result.sellingPrice)} रुपये /-
               </p>
             </div>
           </div>

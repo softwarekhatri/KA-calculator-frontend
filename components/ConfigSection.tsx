@@ -49,7 +49,13 @@ const VariantTable: React.FC<VariantTableProps> = ({
                 scope="col"
                 className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider"
               >
-                Tunch
+                P Tunch
+              </th>
+              <th
+                scope="col"
+                className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider"
+              >
+                S Tunch
               </th>
               <th
                 scope="col"
@@ -61,7 +67,13 @@ const VariantTable: React.FC<VariantTableProps> = ({
                 scope="col"
                 className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider"
               >
-                Making
+                Mak. charge
+              </th>
+              <th
+                scope="col"
+                className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider"
+              >
+                Mak. Type
               </th>
               <th
                 scope="col"
@@ -79,13 +91,19 @@ const VariantTable: React.FC<VariantTableProps> = ({
                     {variant.name}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-300">
-                    {variant.tunch}%
+                    {variant.purchaseTunch}%
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-300">
+                    {variant.saleTunch}%
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-300">
                     ₹{variant.addOnPrice.toLocaleString("en-IN")}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-300">
                     ₹{variant.makingCharge.toLocaleString("en-IN")}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-300">
+                    {variant.makingChargeType}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-right">
                     <div className="flex justify-end gap-3">
@@ -107,7 +125,7 @@ const VariantTable: React.FC<VariantTableProps> = ({
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="text-center py-4 text-slate-400">
+                <td colSpan={7} className="text-center py-4 text-slate-400">
                   No {metalType} variants added yet.
                 </td>
               </tr>

@@ -4,3 +4,5 @@ export interface IPriceData {
 }
 
 export type metalType = "GOLD" | "SILVER";
+
+export type makingChargeType = "PER_GRAM" | "FIXED";

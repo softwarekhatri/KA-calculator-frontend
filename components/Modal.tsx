@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { ItemVariant, MetalType } from "../types";
+import { ItemVariant } from "../types";
+import { metalType, makingChargeType } from "@/utils/types";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (variant: Omit<ItemVariant, "id">) => void;
-  variantToEdit: Omit<ItemVariant, "id"> | null;
-  metalType: MetalType;
+  onSave: (variant: Omit<ItemVariant, "_id">) => void;
+  variantToEdit: Omit<ItemVariant, "_id"> | null;
+  metalType: metalType;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -16,30 +17,51 @@ const Modal: React.FC<ModalProps> = ({
   variantToEdit,
   metalType,
 }) => {
-  const [variant, setVariant] = useState({
+  const [variant, setVariant] = useState<Omit<ItemVariant, "_id">>({
     name: "",
-    tunch: 0,
-    addOnCharges: 0,
+    purchaseTunch: 0,
+    saleTunch: 0,
+    addOnPrice: 0,
     makingCharge: 0,
+    makingChargeType: "PER_GRAM",
+    variant: metalType,
   });
 
   useEffect(() => {
     if (variantToEdit) {
       setVariant(variantToEdit);
     } else {
-      setVariant({ name: "", tunch: 0, addOnCharges: 0, makingCharge: 0 });
+      setVariant({
+        name: "",
+        purchaseTunch: 0,
+        saleTunch: 0,
+        addOnPrice: 0,
+        makingCharge: 0,
+        makingChargeType: "PER_GRAM",
+        variant: metalType,
+      });
     }
-  }, [variantToEdit, isOpen]);
+  }, [variantToEdit, isOpen, metalType]);
 
   if (!isOpen) return null;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setVariant((prev) => ({
-      ...prev,
-      [name]:
-        name === "name" ? value : value.trim() === "" ? 0 : parseFloat(value),
-    }));
+    setVariant((prev) => {
+      if (name === "name") {
+        return { ...prev, name: value };
+      }
+      if (name === "makingChargeType") {
+        return { ...prev, makingChargeType: value as makingChargeType };
+      }
+      if (name === "variant") {
+        return { ...prev, variant: value as metalType };
+      }
+      // Numeric fields
+      return { ...prev, [name]: value.trim() === "" ? 0 : parseFloat(value) };
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -48,12 +70,16 @@ const Modal: React.FC<ModalProps> = ({
       alert("Variant Name is required.");
       return;
     }
-    if (variant.tunch <= 0) {
-      alert("Tunch must be greater than 0.");
+    if (variant.purchaseTunch <= 0) {
+      alert("Purchase Tunch must be greater than 0.");
       return;
     }
-    if (variant.addOnCharges < 0) {
-      alert("Add-On Charges cannot be negative.");
+    if (variant.saleTunch <= 0) {
+      alert("Sale Tunch must be greater than 0.");
+      return;
+    }
+    if (variant.addOnPrice < 0) {
+      alert("Add-On Price cannot be negative.");
       return;
     }
     if (variant.makingCharge < 0) {
@@ -61,17 +87,18 @@ const Modal: React.FC<ModalProps> = ({
       return;
     }
     // Ensure blank fields are set to zero before saving
-    const safeVariant = {
+    const safeVariant: Omit<ItemVariant, "_id"> = {
       ...variant,
-      addOnCharges: variant.addOnCharges || 0,
+      addOnPrice: variant.addOnPrice || 0,
       makingCharge: variant.makingCharge || 0,
+      variant: metalType,
     };
     onSave(safeVariant);
     onClose();
   };
 
   const metalColor =
-    metalType === "Gold" ? "border-amber-500" : "border-slate-400";
+    metalType === "GOLD" ? "border-amber-500" : "border-slate-400";
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 p-4">
@@ -101,15 +128,16 @@ const Modal: React.FC<ModalProps> = ({
           </div>
           <div>
             <label
-              htmlFor="tunch"
+              htmlFor="purchaseTunch"
               className="block text-sm font-medium text-slate-300"
             >
-              Tunch (%)
+              Purchase Tunch (%)
             </label>
             <input
               type="number"
-              name="tunch"
-              id="tunch"
+              name="purchaseTunch"
+              id="purchaseTunch"
+              value={variant.purchaseTunch === 0 ? "" : variant.purchaseTunch}
               onChange={handleChange}
               required
               min="0.01"
@@ -119,20 +147,39 @@ const Modal: React.FC<ModalProps> = ({
           </div>
           <div>
             <label
-              htmlFor="addOnCharges"
+              htmlFor="saleTunch"
               className="block text-sm font-medium text-slate-300"
             >
-              Add-On Charges (per 10g)
+              Sale Tunch (%)
             </label>
             <input
               type="number"
-              name="addOnCharges"
-              id="addOnCharges"
+              name="saleTunch"
+              id="saleTunch"
+              value={variant.saleTunch === 0 ? "" : variant.saleTunch}
+              onChange={handleChange}
+              required
+              min="0.01"
+              step="any"
+              className="mt-1 block w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="addOnPrice"
+              className="block text-sm font-medium text-slate-300"
+            >
+              Add-On Price (per 10g)
+            </label>
+            <input
+              type="number"
+              name="addOnPrice"
+              id="addOnPrice"
               onChange={handleChange}
               min="0"
               step="any"
               className="mt-1 block w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-amber-500 focus:border-amber-500"
-              value={variant.addOnCharges === 0 ? "" : variant.addOnCharges}
+              value={variant.addOnPrice === 0 ? "" : variant.addOnPrice}
             />
           </div>
           <div>
@@ -140,7 +187,7 @@ const Modal: React.FC<ModalProps> = ({
               htmlFor="makingCharge"
               className="block text-sm font-medium text-slate-300"
             >
-              Making Charge (fixed)
+              Making Charge
             </label>
             <input
               type="number"
@@ -152,6 +199,34 @@ const Modal: React.FC<ModalProps> = ({
               className="mt-1 block w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-amber-500 focus:border-amber-500"
               value={variant.makingCharge === 0 ? "" : variant.makingCharge}
             />
+          </div>
+          <div>
+            <label
+              htmlFor="makingChargeType"
+              className="block text-sm font-medium text-slate-300"
+            >
+              Making Charge Type
+            </label>
+            {/* <input
+              type="number"
+              name="makingChargeType"
+              id="makingCharge"
+              onChange={handleChange}
+              min="0"
+              step="any"
+              className="mt-1 block w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+              value={variant.makingCharge === 0 ? "" : variant.makingCharge}
+            /> */}
+            <select
+              name="makingChargeType"
+              id="makingChargeType"
+              onChange={handleChange}
+              value={variant.makingChargeType || "PER_GRAM"}
+              className="mt-1 block w-full bg-slate-700 border border-slate-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+            >
+              <option value="PER_GRAM">Per Gram</option>
+              <option value="FIXED">Fixed</option>
+            </select>
           </div>
           <div className="flex justify-end space-x-3 pt-4">
             <button
