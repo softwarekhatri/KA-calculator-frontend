@@ -3,6 +3,11 @@ import React from "react";
 const Header: React.FC = () => {
   return (
     <header className="py-6 text-center">
+      <img
+        src="/logo.png"
+        alt="Khatri Alankar Logo"
+        className="mx-auto mb-4 h-16 w-16 rounded-full shadow-lg border-4 border-amber-400 object-cover"
+      />
       <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
         <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-yellow-200">
           KHATRI ALANKAR
