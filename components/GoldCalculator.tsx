@@ -94,7 +94,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
       purchasePrice: roundedPurchasePrice,
       makingCharge:
         variant.makingChargeType === "PER_GRAM"
-          ? variant.makingCharge * weightNum
+          ? variant.makingCharge * Math.ceil(weightNum)
           : variant.makingCharge,
       sellingPrice: Math.round(sellingPrice),
     });
