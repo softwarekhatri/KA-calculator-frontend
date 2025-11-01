@@ -5,7 +5,6 @@ export interface ItemVariant {
   name: string;
   purchaseTunch: number;
   saleTunch: number;
-  // tunch: number;
   addOnPrice?: number;
   makingCharge: number;
   makingChargeType: makingChargeType;

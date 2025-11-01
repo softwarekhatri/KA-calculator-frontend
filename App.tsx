@@ -127,7 +127,7 @@ const App: React.FC = () => {
       onClick={() => onClick(tabId)}
       className={`px-4 py-2 text-sm md:text-base font-medium rounded-t-lg transition-colors duration-300 ${
         currentTab === tabId
-          ? "bg-slate-800/50 text-amber-400 border-b-2 border-amber-400"
+          ? "bg-slate-800/50 text-green-400 border-b-2 border-amber-400"
           : "text-slate-400 hover:text-white"
       }`}
     >
