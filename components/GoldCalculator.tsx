@@ -82,7 +82,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
 
     let sellingPrice = (sellingRatePer10Gram / 10) * weightNum;
     if (variant.makingChargeType === "PER_GRAM") {
-      sellingPrice += variant.makingCharge * weightNum;
+      sellingPrice += variant.makingCharge * Math.ceil(weightNum);
     } else if (variant.makingChargeType === "FIXED") {
       sellingPrice += variant.makingCharge;
     }
