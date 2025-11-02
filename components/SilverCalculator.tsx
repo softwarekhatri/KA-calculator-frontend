@@ -47,7 +47,7 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
     }
 
     const purchasePrice =
-      ((purePrice * variant.purchaseTunch) / 1000) * weightNum + 200;
+      ((purePrice * variant.purchaseTunch) / 1000) * weightNum;
     const roundedPurchasePrice = Math.ceil(purchasePrice / 100) * 100;
 
     let sellingRatePer10Gram = purePrice * (variant.saleTunch / 100);
