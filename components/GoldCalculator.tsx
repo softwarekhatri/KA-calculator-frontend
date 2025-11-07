@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { ItemVariant } from "../types";
 import { numberToHindiWords } from "../utils/hindiTranslator";
+import { roundToNearestThousand } from "@/utils/constant";
 
 interface GoldCalculatorProps {
   purePrice: number;
@@ -26,17 +27,12 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
   const [error, setError] = useState("");
 
   const kdmPrices = useMemo(() => {
-    const variant750 = variants.find((v) => v.name === "750 KDM");
-    const variant916 = variants.find((v) => v.name === "916 KDM");
-
-    // let price750 = 0;
     let hindiPrice750 = "अनुपलब्ध";
-    let price750 = purePrice * 0.85;
+    let price750 = roundToNearestThousand(purePrice * 0.85);
     hindiPrice750 = numberToHindiWords(price750) + " रुपये";
 
-    // let price916 = 0;
     let hindiPrice916 = "अनुपलब्ध";
-    let price916 = purePrice * 0.95;
+    let price916 = roundToNearestThousand(purePrice * 0.95);
     hindiPrice916 = numberToHindiWords(price916) + " रुपये";
 
     return {
@@ -44,8 +40,6 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
       price916,
       hindiPrice750,
       hindiPrice916,
-      variant750Found: !!variant750,
-      variant916Found: !!variant916,
     };
   }, [purePrice, variants]);
 
@@ -107,47 +101,30 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
           Current KDM Rates (per 10g)
         </h3>
         <div className="space-y-3">
+          {/* 916 KDM */}
           <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-slate-900/50 p-3 rounded-md">
             <span className="font-semibold text-white">916 KDM (22 Karat)</span>
-            {kdmPrices.variant916Found ? (
-              <div className="flex flex-col items-start text-right w-full sm:w-auto">
-                <p className="text-lg sm:text-xl font-bold text-green-400 leading-tight sm:leading-normal">
-                  ₹
-                  {kdmPrices.price916.toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </p>
-                <p className="text-lg sm:text-sm text-amber-300">
-                  {kdmPrices.hindiPrice916}
-                </p>
-              </div>
-            ) : (
-              <div className="text-left text-slate-400 text-sm w-full sm:w-auto">
-                Variant not found
-              </div>
-            )}
+            <div className="flex flex-col items-end text-right">
+              <p className="text-lg sm:text-xl font-bold text-green-400 leading-tight sm:leading-normal">
+                ₹{kdmPrices.price916}
+              </p>
+              <p className="text-lg sm:text-sm text-amber-300">
+                {kdmPrices.hindiPrice916}
+              </p>
+            </div>
           </div>
+
+          {/* 750 KDM */}
           <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-slate-900/50 p-3 rounded-md">
             <span className="font-semibold text-white">750 KDM (18 Karat)</span>
-            {kdmPrices.variant750Found ? (
-              <div className="flex flex-col items-start text-right w-full sm:w-auto">
-                <p className="text-lg sm:text-xl font-bold text-green-400 leading-tight sm:leading-normal">
-                  ₹
-                  {kdmPrices.price750.toLocaleString("en-IN", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                </p>
-                <p className="text-lg sm:text-sm text-amber-300">
-                  {kdmPrices.hindiPrice750}
-                </p>
-              </div>
-            ) : (
-              <div className="text-right text-slate-400 text-sm w-full sm:w-auto">
-                Variant not found
-              </div>
-            )}
+            <div className="flex flex-col items-end text-right">
+              <p className="text-lg sm:text-xl font-bold text-green-400 leading-tight sm:leading-normal">
+                ₹{kdmPrices.price750}
+              </p>
+              <p className="text-lg sm:text-sm text-amber-300">
+                {kdmPrices.hindiPrice750}
+              </p>
+            </div>
           </div>
         </div>
       </div>
