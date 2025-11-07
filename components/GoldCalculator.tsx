@@ -84,7 +84,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
     setResult({
       variant,
       weight: weightNum,
-      price10Gram: sellingRatePer10Gram,
+      price10Gram: roundToNearestThousand(sellingRatePer10Gram),
       purchasePrice: roundedPurchasePrice,
       makingCharge:
         variant.makingChargeType === "PER_GRAM"
