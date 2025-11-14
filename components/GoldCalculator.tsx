@@ -142,7 +142,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
               htmlFor={`Gold-weight`}
               className="block text-sm font-medium text-slate-300"
             >
-              Weight (in grams)
+              वजन (ग्राम में)
             </label>
             <input
               type="number"
@@ -158,7 +158,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
               htmlFor={`Gold-variant`}
               className="block text-sm font-medium text-slate-300"
             >
-              Variant
+              वस्तु का विकल्प
             </label>
             <select
               id={`Gold-variant`}
@@ -179,7 +179,7 @@ const GoldCalculator: React.FC<GoldCalculatorProps> = ({
               onClick={handleCalculate}
               className={`w-full px-4 py-2 font-bold text-white rounded-md transition bg-amber-600 hover:bg-amber-500`}
             >
-              Calculate Price
+              पैसा जोड़े
             </button>
           </div>
         </div>

@@ -90,7 +90,7 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
             htmlFor={`Silver-weight`}
             className="block text-sm font-medium text-slate-300"
           >
-            Weight (in grams)
+            वजन (ग्राम में)
           </label>
           <input
             type="number"
@@ -106,7 +106,7 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
             htmlFor={`Silver-variant`}
             className="block text-sm font-medium text-slate-300"
           >
-            Variant
+            वस्तु का विकल्प
           </label>
           <select
             id={`Silver-variant`}
@@ -127,7 +127,7 @@ const SilverCalculator: React.FC<SilverCalculatorProps> = ({
             onClick={handleCalculate}
             className={`w-full px-4 py-2 font-bold text-white rounded-md transition bg-slate-600 hover:bg-slate-500`}
           >
-            Calculate Price
+            पैसा जोड़े
           </button>
         </div>
       </div>
